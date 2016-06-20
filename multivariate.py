@@ -58,7 +58,6 @@ plt.ylabel('Interest Rate')
 
 plt.plot(income_linspace, coeff1[0] + coeff1[1]*income_linspace, label='income')
 plt.plot(income_linspace, coeff2[0] + coeff2[5]*income_linspace + coeff2[3]*1, label='income + home ownership')
-##plt.plot(income_linspace, coeff2[0] + coeff2[5]*income_linspace + coeff2[3]*0, label='est_own2')
 plt.plot(income_linspace, coeff3[0] + coeff3[5]*income_linspace + coeff3[3]*1 + coeff3[8]*1*income_linspace, label='income * home ownership')
 
 plt.legend()
