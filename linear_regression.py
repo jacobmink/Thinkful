@@ -7,10 +7,12 @@ loansData = pd.read_csv('https://github.com/Thinkful-Ed/curric-data-001-data-set
 
 interest_rate = loansData['Interest.Rate']
 clean_interest_rate = interest_rate.map(lambda x: round(float(x.rstrip('%'))/100,4))
+loansData['Interest.Rate'] = clean_interest_rate
 print(clean_interest_rate[0:5])
 
 loan_length = loansData['Loan.Length']
 clean_loan_length = loan_length.map(lambda x: x.rstrip('months'))
+loansData['Loan.Length'] = clean_loan_length
 print(clean_loan_length[0:5])
 
 fico_range = loansData['FICO.Range']
@@ -41,6 +43,8 @@ X = sm.add_constant(x)
 model = sm.OLS(y, X)
 f = model.fit()
 print(f.summary())
+
+loansData.to_csv('loansData_clean.csv', header=True, index=False)
 
 
 

@@ -37,7 +37,7 @@ probability_750 = logistic_function(coeff[2],coeff[0],coeff[1], 750, 10000)
 
 X = np.linspace(500,1000,500)
 
-prob_plot = logistic_function(coeff[2],coeff[0],coeff[1], X, 10000).ravel()
+prob_plot = logistic_function(coeff[2],coeff[0],coeff[1], X, 10000)#.ravel()
 
 print('Probability at FICO score of 720: ' + str(probability_720*100) + ' %')
 print('Probability at FICO score of 750: ' + str(probability_750*100) + ' %')
