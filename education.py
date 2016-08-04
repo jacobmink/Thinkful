@@ -294,7 +294,7 @@ for row in merged.index:
 
 ## Analysis
 fig = df.plot(x=df.index,
-              y='Men',
+              y=['Men','Women','Total'],
               kind='bar',
               figsize=(15,5),
              subplots=True,
@@ -317,12 +317,9 @@ y = np.matrix(merged['log_gdp']).transpose()
 results = sm.OLS(y,X).fit()
 results.summary()
 
-<<<<<<< HEAD
 fig, ax = plt.subplots(figsize=(8,6))
 fig = sm.graphics.plot_fit(results, 1, ax=ax)
-ax.legend(loc='best');
-=======
->>>>>>> f2fb8adafcb70652964ee54c5d401ce1fa884ce3
+ax.legend(loc='best')
 
 plt.show()
 
