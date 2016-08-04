@@ -13,7 +13,19 @@ import matplotlib.pyplot as plt
 
 con = lite.connect('citi_bike.db')
 cur = con.cursor()
-sql = "INSERT INTO citibike_reference (id, totalDocks, city, altitude, stAddress2, longitude, postalCode, testStation, stAddress1, stationName, landMark, latitude, location) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+sql = 'INSERT INTO citibike_reference (id, '
+                                       'totalDocks, '
+                                       'city, '
+                                       'altitude, '
+                                       'stAddress2, '
+                                       'longitude, '
+                                       'postalCode, '
+                                       'testStation, '
+                                       'stAddress1, '
+                                       'stationName, '
+                                       'landMark, '
+                                       'latitude, '
+                                       'location) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)'
 id_bikes = collections.defaultdict(int)
 
 r = requests.get('http://www.citibikenyc.com/stations/json')
@@ -25,8 +37,21 @@ station_ids = ['_' + str(x) + ' INT' for x in station_ids]
 with con:
     cur.execute('DROP TABLE IF EXISTS citibike_reference')
     cur.execute('DROP TABLE IF EXISTS available_bikes')
-    cur.execute('CREATE TABLE citibike_reference (id INT PRIMARY KEY, totalDocks INT, city TEXT, altitude INT, stAddress2 TEXT, longitude NUMERIC, postalCode TEXT, testStation TEXT, stAddress1 TEXT, stationName TEXT, landMark TEXT, latitude NUMERIC, location TEXT)')
-    cur.execute('CREATE TABLE available_bikes ( execution_time INT, ' +  ', '.join(station_ids) + ');')
+    cur.execute('CREATE TABLE citibike_reference (id INT PRIMARY KEY, '
+                                                  'totalDocks INT, '
+                                                  'city TEXT, '
+                                                  'altitude INT, '
+                                                  'stAddress2 TEXT, '
+                                                  'longitude NUMERIC, '
+                                                  'postalCode TEXT, '
+                                                  'testStation TEXT, '
+                                                  'stAddress1 TEXT, '
+                                                  'stationName TEXT, '
+                                                  'landMark TEXT, '
+                                                  'latitude NUMERIC, '
+                                                  'location TEXT)')
+    cur.execute('CREATE TABLE available_bikes ( execution_time INT, '
+                                              +  ', '.join(station_ids) + ');')
 
 
 with con:
@@ -63,10 +88,14 @@ while loop_count < 60:
         id_bikes[station['id']] = station['availableBikes']
     
     with con:
-        cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', (exec_time.strftime('%s'),))
+        cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)',
+                                                 (exec_time.strftime('%s'),))
 
         for k, v in id_bikes.iteritems():
-            cur.execute('UPDATE available_bikes SET _' + str(k) + ' = ' + str(v) + ' WHERE execution_time = ' + exec_time.strftime('%s') + ';')
+            cur.execute('UPDATE available_bikes SET _' +
+                        str(k) + ' = ' + str(v) +
+                        ' WHERE execution_time = ' +
+                        exec_time.strftime('%s') + ';')
     con.commit()
     time.sleep(60)
     loop_count += 1
@@ -76,7 +105,9 @@ con.close()
 con = lite.connect('citi_bike.db')
 cur = con.cursor()
 
-df = pd.read_sql_query('SELECT * FROM available_bikes ORDER BY execution_time',con,index_col='execution_time')
+df = pd.read_sql_query('SELECT * FROM available_bikes ORDER BY execution_time',
+                       con,
+                       index_col='execution_time')
 
 hour_change = collections.defaultdict(int)
 for col in df.columns:
@@ -94,7 +125,9 @@ def keywithmaxval(d):
 
 max_station = keywithmaxval(hour_change)
 
-cur.execute('SELECT id, stationName, latitude, longitude FROM citibike_reference WHERE id = ?', (max_station,))
+cur.execute('SELECT id, stationName, latitude, longitude '
+            'FROM citibike_reference '
+            'WHERE id = ?', (max_station,))
 data = cur.fetchone()
 print 'The most active station is station id %s at %s latitude: %s longitude: %s ' % data
 print 'With %d bicycles coming and going in the hour between %s and %s' % (hour_change[max_station],
