@@ -317,6 +317,9 @@ y = np.matrix(merged['log_gdp']).transpose()
 results = sm.OLS(y,X).fit()
 results.summary()
 
+fig, ax = plt.subplots(figsize=(8,6))
+fig = sm.graphics.plot_fit(results, 1, ax=ax)
+ax.legend(loc='best');
 
 plt.show()
 
