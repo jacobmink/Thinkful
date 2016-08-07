@@ -25,7 +25,8 @@ sql = 'INSERT INTO citibike_reference (id, '
                                        'stationName, '
                                        'landMark, '
                                        'latitude, '
-                                       'location) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)'
+                                       'location) '
+                                       'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)'
 id_bikes = collections.defaultdict(int)
 
 r = requests.get('http://www.citibikenyc.com/stations/json')
