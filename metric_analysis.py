@@ -5,8 +5,10 @@ import numpy as np
 from sklearn.cross_validation import KFold
 import sklearn.metrics as metrics
 
+## Read in data
 loansData = pd.read_csv('https://github.com/Thinkful-Ed/curric-data-001-data-sets/raw/master/loans/loansData.csv')
 
+## Clean data
 loansData['Interest.Rate'] = loansData['Interest.Rate'].map(
                     lambda x: round(float(x.rstrip('%'))/100,4))
 clean_interest_rate = loansData['Interest.Rate']
@@ -20,6 +22,7 @@ fico_score = loansData['FICO.Score']
 
 loan_amount = loansData['Amount.Requested']
 
+## Create model
 y = np.matrix(clean_interest_rate).transpose()
 x1 = np.matrix(fico_score).transpose()
 x2 = np.matrix(loan_amount).transpose()
@@ -28,8 +31,8 @@ X = sm.add_constant(x)
 
 model = sm.OLS(y, X)
 f = model.fit()
-f.summary()
 
+## Split data using 10-fold splitting, run error analysis on each fold
 kf = KFold(len(X), n_folds=10)
 mae_train_list = []
 mae_test_list = []
@@ -37,8 +40,8 @@ mse_train_list = []
 mse_test_list = []
 r2_train_list = []
 r2_test_list = []
+
 for train, test in kf:
-#     print train, '\n', test, '\n'
     f = sm.OLS(y[train], X[train]).fit()
     mae_train = metrics.mean_absolute_error(y[train],
                                             f.predict(X[train]))
@@ -64,6 +67,7 @@ for train, test in kf:
                                                 r2_test)
     print ''
 
+## Take average of error analyses for each fold
 avg_mse_train = sum(mse_train_list)/kf.n_folds
 avg_mse_test = sum(mse_test_list)/kf.n_folds
 avg_mae_train = sum(mae_train_list)/kf.n_folds
@@ -74,14 +78,3 @@ avg_r2_test = sum(r2_test_list)/kf.n_folds
 print 'Average MAE: {}'.format(avg_mae_test)
 print '\nAverage MSE: {}'.format(avg_mse_test)
 print '\nAverage R-Squared: {}'.format(avg_r2_test)
-
-
-
-
-
-
-
-
-
-
-
